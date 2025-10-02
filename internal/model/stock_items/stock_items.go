@@ -3,7 +3,7 @@ package stockitems
 import (
 	"time"
 
-	uuid "github.com/jackc/pgx/pgtype/ext/gofrs-uuid"
+	"github.com/gofrs/uuid"
 )
 
 type StockItems struct {

@@ -56,15 +56,21 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr := vars["id"]
+	idWarehouseStr := vars["idWarehouse"]
+	idProductStr := vars["idProduct"]
 
-	id, err := uuid.FromString(idStr)
+	idWarehouse, err := uuid.FromString(idWarehouseStr)
 	if err != nil {
-		httpresponse.JSONError(w, http.StatusBadRequest, "id precisa ser um UUID válido")
+		httpresponse.JSONError(w, http.StatusBadRequest, "idWarehouse precisa ser um UUID válido")
+		return
+	}
+	idProduct, err := uuid.FromString(idProductStr)
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, "idProduct precisa ser um UUID válido")
 		return
 	}
 
-	res := c.Service.GetByID(&id)
+	res := c.Service.GetByID(&idWarehouse, &idProduct)
 
 	if res.Status != http.StatusOK {
 		httpresponse.JSONError(w, res.Status, res.Msg)
@@ -95,15 +101,21 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr := vars["id"]
+	idWarehouseStr := vars["idWarehouse"]
+	idProductStr := vars["idProduct"]
 
-	id, err := uuid.FromString(idStr)
+	idWarehouse, err := uuid.FromString(idWarehouseStr)
 	if err != nil {
-		httpresponse.JSONError(w, http.StatusBadRequest, "id precisa ser um UUID válido")
+		httpresponse.JSONError(w, http.StatusBadRequest, "idWarehouse precisa ser um UUID válido")
+		return
+	}
+	idProduct, err := uuid.FromString(idProductStr)
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, "idProduct precisa ser um UUID válido")
 		return
 	}
 
-	res := c.Service.Delete(&id)
+	res := c.Service.Delete(&idWarehouse, &idProduct)
 
 	if res.Status != http.StatusOK {
 		httpresponse.JSONError(w, res.Status, res.Msg)

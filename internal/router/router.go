@@ -45,9 +45,9 @@ func (r *Router) AttachStockItemsRoutes() {
 
 	subrouter.HandleFunc("", r.StockItemsController.List).Methods(http.MethodGet)
 	subrouter.HandleFunc("", r.StockItemsController.Create).Methods(http.MethodPost)
-	subrouter.HandleFunc("/{id}", r.StockItemsController.GetByID).Methods(http.MethodGet)
-	subrouter.HandleFunc("/{id}", r.StockItemsController.Update).Methods(http.MethodPut)
-	subrouter.HandleFunc("/{id}", r.StockItemsController.Delete).Methods(http.MethodDelete)
+	subrouter.HandleFunc("/{idWarehouse}/{idProduct}", r.StockItemsController.GetByID).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{idWarehouse}/{idProduct}", r.StockItemsController.Update).Methods(http.MethodPut)
+	subrouter.HandleFunc("/{idWarehouse}/{idProduct}", r.StockItemsController.Delete).Methods(http.MethodDelete)
 }
 
 func (r *Router) AttachProductRoutes() {
