@@ -102,15 +102,21 @@ func (c *Controller) ListByWarehouseAndProduct(w http.ResponseWriter, r *http.Re
 }
 
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
-	var stockItems stockmoves.StockMove
+	var stockMove stockmoves.StockMove
 
-	err := json.NewDecoder(r.Body).Decode(&stockItems)
+	err := json.NewDecoder(r.Body).Decode(&stockMove)
 	if err != nil {
 		httpresponse.JSONError(w, http.StatusBadRequest, "request invalido, falha ao decodificar body")
 		return
 	}
 
-	res := c.Service.Create(&stockItems)
+	err = stockMove.ValidateCreate()
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	res := c.Service.Create(&stockMove)
 
 	if res.Status != http.StatusOK {
 		httpresponse.JSONError(w, res.Status, res.Msg)

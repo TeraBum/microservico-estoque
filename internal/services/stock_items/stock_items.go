@@ -53,8 +53,8 @@ func (s *Service) Create(stockItems *stockitemsModel.StockItems) *create.CreateR
 	return &create.CreateResponse{
 		Status:      http.StatusOK,
 		Msg:         "Sucesso",
-		ProductId:   stockItems.ProductId,
-		WarehouseId: stockItems.WarehouseId,
+		ProductId:   *stockItems.ProductId,
+		WarehouseId: *stockItems.WarehouseId,
 	}
 }
 
@@ -70,8 +70,8 @@ func (s *Service) GetByID(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *getbyid
 	return &getbyid.GetByIdResponse{
 		Status:      http.StatusOK,
 		Msg:         "Sucesso",
-		ProductId:   stockItems.ProductId,
-		WarehouseId: stockItems.WarehouseId,
+		ProductId:   *stockItems.ProductId,
+		WarehouseId: *stockItems.WarehouseId,
 	}
 }
 

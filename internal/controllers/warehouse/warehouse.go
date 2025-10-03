@@ -89,6 +89,12 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = warehouse.ValidateUpdate()
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	res := c.Service.Update(&warehouse)
 
 	if res.Status != http.StatusOK {

@@ -44,6 +44,12 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = stockItems.ValidateCreate()
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	res := c.Service.Create(&stockItems)
 
 	if res.Status != http.StatusOK {
@@ -86,6 +92,12 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&stockItems)
 	if err != nil {
 		httpresponse.JSONError(w, http.StatusBadRequest, "request invalido, falha ao decodificar body")
+		return
+	}
+
+	err = stockItems.ValidateUpdate()
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 

@@ -100,7 +100,7 @@ func (s *Service) Create(warehouse *stockmovesModel.StockMove) *create.CreateRes
 	return &create.CreateResponse{
 		Status: http.StatusOK,
 		Msg:    "Sucesso",
-		Id:     result.Id,
+		Id:     *result.Id,
 	}
 }
 
@@ -116,11 +116,11 @@ func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 	return &getbyid.GetByIdResponse{
 		Status:      http.StatusOK,
 		Msg:         "Sucesso",
-		Id:          stockMoves.Id,
-		ProductId:   stockMoves.ProductId,
-		WarehouseId: stockMoves.WarehouseId,
-		QtyMoved:    stockMoves.QtyMoved,
-		Reason:      stockMoves.Reason,
-		CreatedAt:   stockMoves.CreatedAt,
+		Id:          *stockMoves.Id,
+		ProductId:   *stockMoves.ProductId,
+		WarehouseId: *stockMoves.WarehouseId,
+		QtyMoved:    *stockMoves.QtyMoved,
+		Reason:      *stockMoves.Reason,
+		CreatedAt:   *stockMoves.CreatedAt,
 	}
 }
