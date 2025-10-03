@@ -1,0 +1,24 @@
+package controllers
+
+import (
+	stockitems "api-estoque/internal/controllers/stock_items"
+	stockmoves "api-estoque/internal/controllers/stock_moves"
+	"api-estoque/internal/controllers/warehouse"
+	"api-estoque/internal/services"
+
+	"github.com/sirupsen/logrus"
+)
+
+type Controllers struct {
+	StockItemsController *stockitems.Controller
+	StockMovesController *stockmoves.Controller
+	WarehouseController  *warehouse.Controller
+}
+
+func InstanciateControllers(services *services.Services, logger *logrus.Logger) *Controllers {
+	return &Controllers{
+		StockItemsController: stockitems.New(services.StockItemsService, logger),
+		StockMovesController: stockmoves.New(services.StockMovesService, logger),
+		WarehouseController:  warehouse.New(services.WarehouseService, logger),
+	}
+}

@@ -7,8 +7,8 @@ import (
 )
 
 type GetByIdResponse struct {
-	Status      int
-	Msg         string
+	Status      int       `json:"-"`
+	Msg         string    `json:"-"`
 	ProductId   uuid.UUID `json:"product_id"`
 	WarehouseId uuid.UUID `json:"warehouse_id"`
 	Quantity    int64     `json:"quantity"`

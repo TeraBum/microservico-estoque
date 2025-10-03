@@ -1,8 +1,10 @@
 package router
 
 import (
-	"api-estoque/internal/controller/product"
-	stockitems "api-estoque/internal/controller/stock_items"
+	"api-estoque/internal/controllers"
+	stockitems "api-estoque/internal/controllers/stock_items"
+	stockmoves "api-estoque/internal/controllers/stock_moves"
+	"api-estoque/internal/controllers/warehouse"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,21 +14,23 @@ import (
 type Router struct {
 	Logger               *logrus.Logger
 	Router               *mux.Router
-	ProductController    *product.Controller
+	WarehouseController  *warehouse.Controller
 	StockItemsController *stockitems.Controller
+	StockMovesController *stockmoves.Controller
 }
 
-func New(logger *logrus.Logger, productController *product.Controller, stockItemsController *stockitems.Controller) *Router {
+func New(logger *logrus.Logger, controllers *controllers.Controllers) *Router {
 	return &Router{
 		Logger:               logger,
 		Router:               mux.NewRouter(),
-		ProductController:    productController,
-		StockItemsController: stockItemsController,
+		WarehouseController:  controllers.WarehouseController,
+		StockItemsController: controllers.StockItemsController,
+		StockMovesController: controllers.StockMovesController,
 	}
 }
 
 func (r *Router) Run() {
-	r.Logger.Info("Iniciando rotas.")
+	r.Logger.Info("Iniciando rotas...")
 	r.AttachRoutes()
 
 	r.Router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -37,7 +41,8 @@ func (r *Router) Run() {
 
 func (r *Router) AttachRoutes() {
 	r.AttachStockItemsRoutes()
-	r.AttachProductRoutes()
+	r.AttachWarehouseRoutes()
+	r.AttachStockMovesRoutes()
 }
 
 func (r *Router) AttachStockItemsRoutes() {
@@ -50,12 +55,23 @@ func (r *Router) AttachStockItemsRoutes() {
 	subrouter.HandleFunc("/{idWarehouse}/{idProduct}", r.StockItemsController.Delete).Methods(http.MethodDelete)
 }
 
-func (r *Router) AttachProductRoutes() {
-	subrouter := r.Router.PathPrefix("/api/v1/product").Subrouter()
+func (r *Router) AttachStockMovesRoutes() {
+	subrouter := r.Router.PathPrefix("/api/v1/stock-move").Subrouter()
 
-	subrouter.HandleFunc("", r.ProductController.List).Methods(http.MethodGet)
-	subrouter.HandleFunc("", r.ProductController.Create).Methods(http.MethodPost)
-	subrouter.HandleFunc("/{id}", r.ProductController.GetByID).Methods(http.MethodGet)
-	subrouter.HandleFunc("/{id}", r.ProductController.Update).Methods(http.MethodPut)
-	subrouter.HandleFunc("/{id}", r.ProductController.Delete).Methods(http.MethodDelete)
+	subrouter.HandleFunc("", r.StockMovesController.List).Methods(http.MethodGet)
+	subrouter.HandleFunc("", r.StockMovesController.Create).Methods(http.MethodPost)
+	subrouter.HandleFunc("/{id}", r.StockMovesController.GetByID).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{idProduct}", r.StockMovesController.ListByProduct).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{idWarehouse}", r.StockMovesController.ListByWarehouse).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{idWarehouse}/{idProduct}", r.StockMovesController.ListByWarehouseAndProduct).Methods(http.MethodGet)
+}
+
+func (r *Router) AttachWarehouseRoutes() {
+	subrouter := r.Router.PathPrefix("/api/v1/warehouse").Subrouter()
+
+	subrouter.HandleFunc("", r.WarehouseController.List).Methods(http.MethodGet)
+	subrouter.HandleFunc("", r.WarehouseController.Create).Methods(http.MethodPost)
+	subrouter.HandleFunc("/{id}", r.WarehouseController.GetByID).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{id}", r.WarehouseController.Update).Methods(http.MethodPut)
+	subrouter.HandleFunc("/{id}", r.WarehouseController.Delete).Methods(http.MethodDelete)
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type ListResponse struct {
-	Status     int
-	Msg        string
+	Status     int                      `json:"-"`
+	Msg        string                   `json:"-"`
 	StockItems *[]stockitems.StockItems `json:"stock_items"`
 }

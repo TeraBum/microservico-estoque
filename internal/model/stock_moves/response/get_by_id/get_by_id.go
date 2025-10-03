@@ -1,4 +1,4 @@
-package stockmoves
+package getbyid
 
 import (
 	"time"
@@ -6,7 +6,9 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type StockMove struct {
+type GetByIdResponse struct {
+	Status      int       `json:"-"`
+	Msg         string    `json:"-"`
 	Id          uuid.UUID `db:"Id" json:"id"`
 	ProductId   uuid.UUID `db:"ProductId" json:"product_id"`
 	WarehouseId uuid.UUID `db:"WarehouseId" json:"warehouse_id"`
