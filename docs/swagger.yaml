@@ -7,6 +7,24 @@ definitions:
       status:
         type: integer
     type: object
+  product.Product:
+    properties:
+      category:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      imagesJson: {}
+      isActive:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
   stockitems.StockItems:
     properties:
       product_id:
@@ -48,10 +66,134 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Estoque microservice API documentation.
+  description: Documentação API de estoque TeraBum
   title: API Estoque
   version: "1.0"
 paths:
+  /products:
+    get:
+      description: Retorna todos os produtos cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar produtos
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Faz a criação de um novo produto
+      parameters:
+      - description: Produto
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Criar produto
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      description: Exclui um produto pelo seu ID
+      parameters:
+      - description: UUID do Produto
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Remover produto
+      tags:
+      - products
+    get:
+      description: Retorna um produto específico pelo seu ID
+      parameters:
+      - description: UUID do Produto
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Buscar produto por ID
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um produto existente
+      parameters:
+      - description: Produto
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Atualizar produto
+      tags:
+      - products
   /stock-items:
     get:
       description: Pega todos os registros de item de estoque

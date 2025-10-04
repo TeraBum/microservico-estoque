@@ -11,8 +11,7 @@ import (
 )
 
 type Config struct {
-	Port               string `envconfig:"PORT"`
-	SupabaseConnString string `envconfig:"SUPABASE_CONN_STRING"`
+	SupabaseConnString string `envconfig:"SUPABASE_CONN_STRING" required:"true"`
 }
 
 var Env Config

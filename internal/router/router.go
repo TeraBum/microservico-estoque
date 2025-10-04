@@ -1,11 +1,12 @@
 package router
 
 import (
+	_ "api-estoque/docs"
 	"api-estoque/internal/controllers"
+	"api-estoque/internal/controllers/product"
 	stockitems "api-estoque/internal/controllers/stock_items"
 	stockmoves "api-estoque/internal/controllers/stock_moves"
 	"api-estoque/internal/controllers/warehouse"
-	_ "api-estoque/internal/docs"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,6 +20,7 @@ type Router struct {
 	WarehouseController  *warehouse.Controller
 	StockItemsController *stockitems.Controller
 	StockMovesController *stockmoves.Controller
+	ProductController    *product.Controller
 }
 
 func New(logger *logrus.Logger, controllers *controllers.Controllers) *Router {
@@ -28,6 +30,7 @@ func New(logger *logrus.Logger, controllers *controllers.Controllers) *Router {
 		WarehouseController:  controllers.WarehouseController,
 		StockItemsController: controllers.StockItemsController,
 		StockMovesController: controllers.StockMovesController,
+		ProductController:    controllers.ProductController,
 	}
 }
 
@@ -45,6 +48,7 @@ func (r *Router) AttachRoutes() {
 	r.AttachStockItemsRoutes()
 	r.AttachWarehouseRoutes()
 	r.AttachStockMovesRoutes()
+	r.AttachProductRoutes()
 	r.Router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 }
 
@@ -77,4 +81,14 @@ func (r *Router) AttachWarehouseRoutes() {
 	subrouter.HandleFunc("", r.WarehouseController.Update).Methods(http.MethodPut)
 	subrouter.HandleFunc("/{id}", r.WarehouseController.GetByID).Methods(http.MethodGet)
 	subrouter.HandleFunc("/{id}", r.WarehouseController.Delete).Methods(http.MethodDelete)
+}
+
+func (r *Router) AttachProductRoutes() {
+	subrouter := r.Router.PathPrefix("/api/v1/products").Subrouter()
+
+	subrouter.HandleFunc("", r.ProductController.List).Methods(http.MethodGet)
+	subrouter.HandleFunc("", r.ProductController.Create).Methods(http.MethodPost)
+	subrouter.HandleFunc("", r.ProductController.Update).Methods(http.MethodPut)
+	subrouter.HandleFunc("/{id}", r.ProductController.GetByID).Methods(http.MethodGet)
+	subrouter.HandleFunc("/{id}", r.ProductController.Delete).Methods(http.MethodDelete)
 }

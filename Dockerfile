@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 ENV CGO_ENABLED=0 GOOS=linux
 
@@ -9,13 +9,14 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o ./bin/main ./cmd/app/main.go
+RUN go build -ldflags="-w -s" -o ./bin/main ./main.go
 
 FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /app/main .
+COPY --from=builder /src/bin/main .
+COPY /.env .
 
 EXPOSE 8080
 
