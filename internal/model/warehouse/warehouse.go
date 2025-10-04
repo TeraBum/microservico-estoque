@@ -34,11 +34,15 @@ func (w *Warehouse) ValidateUpdate() error {
 	if w.Location == nil && w.Name == nil {
 		return errors.New("atributo 'location' e 'name' faltando, nada para alterar")
 	}
-	if *w.Location == "" {
-		return errors.New("atributo 'location' nao pode ser vazio")
+	if w.Location != nil {
+		if *w.Location == "" {
+			return errors.New("atributo 'location' nao pode ser vazio")
+		}
 	}
-	if *w.Name == "" {
-		return errors.New("atributo 'name' nao pode ser vazio")
+	if w.Name != nil {
+		if *w.Name == "" {
+			return errors.New("atributo 'name' nao pode ser vazio")
+		}
 	}
 	return nil
 }

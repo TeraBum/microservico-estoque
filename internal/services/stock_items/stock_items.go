@@ -72,6 +72,9 @@ func (s *Service) GetByID(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *getbyid
 		Msg:         "Sucesso",
 		ProductId:   *stockItems.ProductId,
 		WarehouseId: *stockItems.WarehouseId,
+		Quantity:    *stockItems.Quantity,
+		Reserved:    *stockItems.Reserved,
+		UpdatedAt:   *stockItems.UpdatedAt,
 	}
 }
 

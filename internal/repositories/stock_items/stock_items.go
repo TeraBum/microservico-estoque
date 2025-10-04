@@ -5,6 +5,8 @@ import (
 	stockitems "api-estoque/internal/model/stock_items"
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -99,18 +101,38 @@ func (r *Repository) GetByID(idWarehouse *uuid.UUID, idProduct *uuid.UUID) (*sto
 func (r *Repository) Update(s *stockitems.StockItems) error {
 	ctx := context.Background()
 
+	setParts := []string{}
+	args := []any{}
+	argPos := 1
+
+	if s.Quantity != nil {
+		setParts = append(setParts, `"Quantity"=$`+strconv.Itoa(argPos))
+		args = append(args, *s.Quantity)
+		argPos++
+	}
+
+	if s.Reserved != nil {
+		setParts = append(setParts, `"Reserved"=$`+strconv.Itoa(argPos))
+		args = append(args, *s.Reserved)
+		argPos++
+	}
+
+	if len(setParts) > 0 {
+		setParts = append(setParts, `"UpdatedAt"=now()`)
+	} else {
+		return nil
+	}
+
 	query := `
 		UPDATE "StockItems"
-		SET "Quantity"=$1, "Reserved"=$2, "UpdatedAt"=now()
-		WHERE "ProductId"=$3 AND "WarehouseId"=$4
+		SET ` + strings.Join(setParts, ", ") + `
+		WHERE "ProductId"=$` + strconv.Itoa(argPos) + ` AND "WarehouseId"=$` + strconv.Itoa(argPos+1) + `
 		RETURNING "UpdatedAt"
 	`
-	return r.DB.QueryRow(ctx, query,
-		s.Quantity,
-		s.Reserved,
-		s.ProductId,
-		s.WarehouseId,
-	).Scan(&s.UpdatedAt)
+
+	args = append(args, s.ProductId, s.WarehouseId)
+
+	return r.DB.QueryRow(ctx, query, args...).Scan(&s.UpdatedAt)
 }
 
 func (r *Repository) Delete(idWarehouse *uuid.UUID, idProduct *uuid.UUID) error {

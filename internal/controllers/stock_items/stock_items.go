@@ -24,7 +24,17 @@ func New(service *stockitemsSrvc.Service, logger *logrus.Logger) *Controller {
 	}
 }
 
+// List godoc
+// @Summary Listar items do estoque
+// @Description Pega todos os registros de item de estoque
+// @Tags stock-items
+// @Produce json
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-items [get]
 func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) List - req recebida")
+
 	res := c.Service.List()
 
 	if res.Status != http.StatusOK {
@@ -35,7 +45,19 @@ func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// Create godoc
+// @Summary Cria item de estoque
+// @Description Faz a criação de item de estoque
+// @Tags stock-items
+// @Accept json
+// @Produce json
+// @Param stockItem body stockitemsModel.StockItems true "Stock Item"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-items [post]
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) Create - req recebida")
+
 	var stockItems stockitemsModel.StockItems
 
 	err := json.NewDecoder(r.Body).Decode(&stockItems)
@@ -60,7 +82,20 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// GetByID godoc
+// @Summary Buscar item de estoque por ID
+// @Description Retorna um item de estoque específico pelo idWarehouse e idProduct
+// @Tags stock-items
+// @Produce json
+// @Param idWarehouse path string true "UUID do Warehouse"
+// @Param idProduct path string true "UUID do Produto"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Failure 404 {object} httpresponse.Response
+// @Router /stock-items/{idWarehouse}/{idProduct} [get]
 func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) GetByID - req recebida")
+
 	vars := mux.Vars(r)
 	idWarehouseStr := vars["idWarehouse"]
 	idProductStr := vars["idProduct"]
@@ -86,7 +121,20 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// Update godoc
+// @Summary Atualizar item de estoque
+// @Description Atualiza os dados de um item de estoque existente
+// @Tags stock-items
+// @Accept json
+// @Produce json
+// @Param stockItem body stockitemsModel.StockItems true "Stock Item"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Failure 404 {object} httpresponse.Response
+// @Router /stock-items/{idWarehouse}/{idProduct} [put]
 func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) Update - req recebida")
+
 	var stockItems stockitemsModel.StockItems
 
 	err := json.NewDecoder(r.Body).Decode(&stockItems)
@@ -111,7 +159,20 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// Delete godoc
+// @Summary Remover item de estoque
+// @Description Exclui um item de estoque pelo idWarehouse e idProduct
+// @Tags stock-items
+// @Produce json
+// @Param idWarehouse path string true "UUID do Warehouse"
+// @Param idProduct path string true "UUID do Produto"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Failure 404 {object} httpresponse.Response
+// @Router /stock-items/{idWarehouse}/{idProduct} [delete]
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) Delete - req recebida")
+
 	vars := mux.Vars(r)
 	idWarehouseStr := vars["idWarehouse"]
 	idProductStr := vars["idProduct"]

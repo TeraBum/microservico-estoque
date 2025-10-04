@@ -60,9 +60,10 @@ func (s *Service) Create(warehouse *warehouseModel.Warehouse) *create.CreateResp
 func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 	warehouse, err := s.Repository.GetByID(id)
 	if err != nil {
+		s.Logger.Infof("GetByID - %v", err)
 		return &getbyid.GetByIdResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar busca de produto por id",
+			Msg:    "falha ao executar busca de galpao por id",
 		}
 	}
 
@@ -79,9 +80,10 @@ func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 func (s *Service) Update(warehouse *warehouseModel.Warehouse) *httpresponse.Response {
 	err := s.Repository.Update(warehouse)
 	if err != nil {
+		s.Logger.Infof("Update - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar busca de produto por id",
+			Msg:    "falha ao executar update de dados de galpao por id",
 		}
 	}
 

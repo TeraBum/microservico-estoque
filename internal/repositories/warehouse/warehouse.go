@@ -5,6 +5,8 @@ import (
 	warehouse "api-estoque/internal/model/warehouse"
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -95,17 +97,36 @@ func (r *Repository) GetByID(id *uuid.UUID) (*warehouse.Warehouse, error) {
 func (r *Repository) Update(w *warehouse.Warehouse) error {
 	ctx := context.Background()
 
+	setParts := []string{}
+	args := []any{}
+	argPos := 1
+
+	if w.Name != nil && *w.Name != "" {
+		setParts = append(setParts, `"Name"=$`+strconv.Itoa(argPos))
+		args = append(args, *w.Name)
+		argPos++
+	}
+
+	if w.Location != nil && *w.Location != "" {
+		setParts = append(setParts, `"Location"=$`+strconv.Itoa(argPos))
+		args = append(args, *w.Location)
+		argPos++
+	}
+
+	if len(setParts) == 0 {
+		return nil
+	}
+
 	query := `
 		UPDATE "Warehouse"
-		SET "Name"=$1, "Location"=$2
-		WHERE "Id"=$3
+		SET ` + strings.Join(setParts, ", ") + `
+		WHERE "Id"=$` + strconv.Itoa(argPos) + `
 		RETURNING "CreatedAt"
 	`
-	return r.DB.QueryRow(ctx, query,
-		w.Name,
-		w.Location,
-		w.Id,
-	).Scan(&w.CreatedAt)
+
+	args = append(args, w.Id)
+
+	return r.DB.QueryRow(ctx, query, args...).Scan(&w.CreatedAt)
 }
 
 func (r *Repository) Delete(id *uuid.UUID) error {

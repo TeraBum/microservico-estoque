@@ -24,7 +24,17 @@ func New(service *stockmovesSrvc.Service, logger *logrus.Logger) *Controller {
 	}
 }
 
+// List godoc
+// @Summary Listar movimentações de estoque
+// @Description Retorna todas as movimentações de estoque
+// @Tags stock-moves
+// @Produce json
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-move [get]
 func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) List - req recebida")
+
 	res := c.Service.List()
 
 	if res.Status != http.StatusOK {
@@ -35,7 +45,18 @@ func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// ListByProduct godoc
+// @Summary Listar movimentações por produto
+// @Description Retorna todas as movimentações de estoque de um produto específico
+// @Tags stock-moves
+// @Produce json
+// @Param idProduct path string true "UUID do Produto"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-move/by-product/{idProduct} [get]
 func (c *Controller) ListByProduct(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) ListByProduct - req recebida")
+
 	vars := mux.Vars(r)
 	idProductStr := vars["idProduct"]
 
@@ -55,7 +76,18 @@ func (c *Controller) ListByProduct(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// ListByWarehouse godoc
+// @Summary Listar movimentações por armazém
+// @Description Retorna todas as movimentações de estoque de um armazém específico
+// @Tags stock-moves
+// @Produce json
+// @Param idWarehouse path string true "UUID do Armazém"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-move/by-warehouse/{idWarehouse} [get]
 func (c *Controller) ListByWarehouse(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) ListByWarehouse - req recebida")
+
 	vars := mux.Vars(r)
 	idWarehouseStr := vars["idWarehouse"]
 
@@ -75,7 +107,19 @@ func (c *Controller) ListByWarehouse(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// ListByWarehouseAndProduct godoc
+// @Summary Listar movimentações por armazém e produto
+// @Description Retorna todas as movimentações de estoque filtradas por armazém e produto
+// @Tags stock-moves
+// @Produce json
+// @Param idWarehouse path string true "UUID do Armazém"
+// @Param idProduct path string true "UUID do Produto"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-move/by-warehouse-product/{idWarehouse}/{idProduct} [get]
 func (c *Controller) ListByWarehouseAndProduct(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) ListByWarehouseAndProduct - req recebida")
+
 	vars := mux.Vars(r)
 	idWarehouseStr := vars["idWarehouse"]
 	idProductStr := vars["idProduct"]
@@ -101,7 +145,19 @@ func (c *Controller) ListByWarehouseAndProduct(w http.ResponseWriter, r *http.Re
 	httpresponse.JSONSuccess(w, res)
 }
 
+// Create godoc
+// @Summary Criar movimentação de estoque
+// @Description Cria uma nova movimentação de estoque
+// @Tags stock-moves
+// @Accept json
+// @Produce json
+// @Param stockMove body stockmoves.StockMove true "Movimentação de Estoque"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Router /stock-move [post]
 func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) Create - req recebida")
+
 	var stockMove stockmoves.StockMove
 
 	err := json.NewDecoder(r.Body).Decode(&stockMove)
@@ -126,7 +182,19 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	httpresponse.JSONSuccess(w, res)
 }
 
+// GetByID godoc
+// @Summary Buscar movimentação de estoque por ID
+// @Description Retorna uma movimentação de estoque específica pelo seu ID
+// @Tags stock-moves
+// @Produce json
+// @Param id path string true "UUID da Movimentação"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Failure 404 {object} httpresponse.Response
+// @Router /stock-move/{id} [get]
 func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockMove) GetByID - req recebida")
+
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 

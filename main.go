@@ -15,6 +15,11 @@ import (
 	"time"
 )
 
+// @title API Estoque
+// @version 1.0
+// @description Documentação API de estoque TeraBum
+// @BasePath /api/v1
+// @schemes http
 func main() {
 	// Setup
 	logger := utils.SetupLogger()

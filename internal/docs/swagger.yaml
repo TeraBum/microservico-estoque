@@ -1,0 +1,463 @@
+basePath: /api/v1
+definitions:
+  httpresponse.Response:
+    properties:
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  stockitems.StockItems:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+      reserved:
+        type: integer
+      updated_at:
+        type: string
+      warehouse_id:
+        type: string
+    type: object
+  stockmoves.StockMove:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      product_id:
+        type: string
+      qty_moved:
+        type: integer
+      reason:
+        type: string
+      warehouse_id:
+        type: string
+    type: object
+  warehouse.Warehouse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Estoque microservice API documentation.
+  title: API Estoque
+  version: "1.0"
+paths:
+  /stock-items:
+    get:
+      description: Pega todos os registros de item de estoque
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar items do estoque
+      tags:
+      - stock-items
+    post:
+      consumes:
+      - application/json
+      description: Faz a criação de item de estoque
+      parameters:
+      - description: Stock Item
+        in: body
+        name: stockItem
+        required: true
+        schema:
+          $ref: '#/definitions/stockitems.StockItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Cria item de estoque
+      tags:
+      - stock-items
+  /stock-items/{idWarehouse}/{idProduct}:
+    delete:
+      description: Exclui um item de estoque pelo idWarehouse e idProduct
+      parameters:
+      - description: UUID do Warehouse
+        in: path
+        name: idWarehouse
+        required: true
+        type: string
+      - description: UUID do Produto
+        in: path
+        name: idProduct
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Remover item de estoque
+      tags:
+      - stock-items
+    get:
+      description: Retorna um item de estoque específico pelo idWarehouse e idProduct
+      parameters:
+      - description: UUID do Warehouse
+        in: path
+        name: idWarehouse
+        required: true
+        type: string
+      - description: UUID do Produto
+        in: path
+        name: idProduct
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Buscar item de estoque por ID
+      tags:
+      - stock-items
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um item de estoque existente
+      parameters:
+      - description: Stock Item
+        in: body
+        name: stockItem
+        required: true
+        schema:
+          $ref: '#/definitions/stockitems.StockItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Atualizar item de estoque
+      tags:
+      - stock-items
+  /stock-move:
+    get:
+      description: Retorna todas as movimentações de estoque
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar movimentações de estoque
+      tags:
+      - stock-moves
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova movimentação de estoque
+      parameters:
+      - description: Movimentação de Estoque
+        in: body
+        name: stockMove
+        required: true
+        schema:
+          $ref: '#/definitions/stockmoves.StockMove'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Criar movimentação de estoque
+      tags:
+      - stock-moves
+  /stock-move/{id}:
+    get:
+      description: Retorna uma movimentação de estoque específica pelo seu ID
+      parameters:
+      - description: UUID da Movimentação
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Buscar movimentação de estoque por ID
+      tags:
+      - stock-moves
+  /stock-move/by-product/{idProduct}:
+    get:
+      description: Retorna todas as movimentações de estoque de um produto específico
+      parameters:
+      - description: UUID do Produto
+        in: path
+        name: idProduct
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar movimentações por produto
+      tags:
+      - stock-moves
+  /stock-move/by-warehouse-product/{idWarehouse}/{idProduct}:
+    get:
+      description: Retorna todas as movimentações de estoque filtradas por armazém
+        e produto
+      parameters:
+      - description: UUID do Armazém
+        in: path
+        name: idWarehouse
+        required: true
+        type: string
+      - description: UUID do Produto
+        in: path
+        name: idProduct
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar movimentações por armazém e produto
+      tags:
+      - stock-moves
+  /stock-move/by-warehouse/{idWarehouse}:
+    get:
+      description: Retorna todas as movimentações de estoque de um armazém específico
+      parameters:
+      - description: UUID do Armazém
+        in: path
+        name: idWarehouse
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar movimentações por armazém
+      tags:
+      - stock-moves
+  /warehouses:
+    get:
+      description: Retorna a lista de todos os armazéns cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Listar armazéns
+      tags:
+      - warehouse
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo armazém no sistema
+      parameters:
+      - description: Warehouse
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/warehouse.Warehouse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Criar armazém
+      tags:
+      - warehouse
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um armazém existente
+      parameters:
+      - description: Warehouse
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/warehouse.Warehouse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Atualizar armazém
+      tags:
+      - warehouse
+  /warehouses/{id}:
+    delete:
+      description: Exclui um armazém específico pelo seu UUID
+      parameters:
+      - description: UUID do Armazém
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Remover armazém
+      tags:
+      - warehouse
+    get:
+      description: Retorna um armazém específico pelo seu UUID
+      parameters:
+      - description: UUID do Armazém
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Buscar armazém por ID
+      tags:
+      - warehouse
+schemes:
+- http
+swagger: "2.0"
