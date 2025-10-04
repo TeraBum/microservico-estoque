@@ -923,7 +923,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/api/v1",
+	BasePath:         "/api/v1/estoque",
 	Schemes:          []string{"http"},
 	Title:            "API Estoque",
 	Description:      "Documentação API de estoque TeraBum",

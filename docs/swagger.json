@@ -9,7 +9,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "basePath": "/api/v1",
+    "basePath": "/api/v1/estoque",
     "paths": {
         "/products": {
             "get": {

@@ -18,7 +18,7 @@ import (
 // @title API Estoque
 // @version 1.0
 // @description Documentação API de estoque TeraBum
-// @BasePath /api/v1
+// @BasePath /api/v1/estoque
 // @schemes http
 func main() {
 	// Setup

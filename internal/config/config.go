@@ -12,6 +12,7 @@ import (
 
 type Config struct {
 	SupabaseConnString string `envconfig:"SUPABASE_CONN_STRING" required:"true"`
+	JwtSecret          string `envconfig:"JWT_SECRET" required:"true"`
 }
 
 var Env Config
