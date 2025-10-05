@@ -28,9 +28,10 @@ func New(repository *warehouseRepo.Repository, logger *logrus.Logger) *Service {
 func (s *Service) List() *list.ListResponse {
 	warehouses, err := s.Repository.List()
 	if err != nil {
+		s.Logger.Errorf("(Warehouse) List - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar consulta para listar produtos",
+			Msg:    "falha ao executar consulta para listar galpoes",
 		}
 	}
 
@@ -44,9 +45,10 @@ func (s *Service) List() *list.ListResponse {
 func (s *Service) Create(warehouse *warehouseModel.Warehouse) *create.CreateResponse {
 	result, err := s.Repository.Create(warehouse)
 	if err != nil {
+		s.Logger.Errorf("(Warehouse) Create - %v", err)
 		return &create.CreateResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar criacao de produto",
+			Msg:    "falha ao executar criacao de galpao",
 		}
 	}
 
@@ -60,7 +62,7 @@ func (s *Service) Create(warehouse *warehouseModel.Warehouse) *create.CreateResp
 func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 	warehouse, err := s.Repository.GetByID(id)
 	if err != nil {
-		s.Logger.Infof("GetByID - %v", err)
+		s.Logger.Errorf("(Warehouse) GetByID - %v", err)
 		return &getbyid.GetByIdResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar busca de galpao por id",
@@ -80,7 +82,7 @@ func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 func (s *Service) Update(warehouse *warehouseModel.Warehouse) *httpresponse.Response {
 	err := s.Repository.Update(warehouse)
 	if err != nil {
-		s.Logger.Infof("Update - %v", err)
+		s.Logger.Errorf("(Warehouse) Update - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar update de dados de galpao por id",
@@ -96,9 +98,10 @@ func (s *Service) Update(warehouse *warehouseModel.Warehouse) *httpresponse.Resp
 func (s *Service) Delete(id *uuid.UUID) *httpresponse.Response {
 	err := s.Repository.Delete(id)
 	if err != nil {
+		s.Logger.Errorf("(Warehouse) Delete - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao deletar warehouse",
+			Msg:    "falha ao deletar galpao",
 		}
 	}
 

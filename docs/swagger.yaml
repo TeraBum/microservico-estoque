@@ -38,6 +38,15 @@ definitions:
       warehouse_id:
         type: string
     type: object
+  stockitems.StockItemsBaixa:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+      warehouse_id:
+        type: string
+    type: object
   stockmoves.StockMove:
     properties:
       created_at:
@@ -310,6 +319,36 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/stockitems.StockItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpresponse.Response'
+      summary: Atualizar item de estoque
+      tags:
+      - stock-items
+  /stock-items/baixa:
+    post:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um item de estoque existente
+      parameters:
+      - description: Stock Item
+        in: body
+        name: stockItem
+        required: true
+        schema:
+          $ref: '#/definitions/stockitems.StockItemsBaixa'
       produces:
       - application/json
       responses:

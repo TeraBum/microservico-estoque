@@ -3,7 +3,9 @@ package stockitems
 import (
 	httpresponse "api-estoque/internal/model/http_response"
 	stockitemsModel "api-estoque/internal/model/stock_items"
+	stockmoves "api-estoque/internal/model/stock_moves"
 	stockitemsSrvc "api-estoque/internal/services/stock_items"
+	stockmovesSrvc "api-estoque/internal/services/stock_moves"
 	"encoding/json"
 	"net/http"
 
@@ -13,14 +15,16 @@ import (
 )
 
 type Controller struct {
-	Service *stockitemsSrvc.Service
-	Logger  *logrus.Logger
+	Service           *stockitemsSrvc.Service
+	StockMovesService *stockmovesSrvc.Service
+	Logger            *logrus.Logger
 }
 
-func New(service *stockitemsSrvc.Service, logger *logrus.Logger) *Controller {
+func New(service *stockitemsSrvc.Service, stockMovesService *stockmovesSrvc.Service, logger *logrus.Logger) *Controller {
 	return &Controller{
-		Service: service,
-		Logger:  logger,
+		Service:           service,
+		StockMovesService: stockMovesService,
+		Logger:            logger,
 	}
 }
 
@@ -150,6 +154,57 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res := c.Service.Update(&stockItems)
+
+	if res.Status != http.StatusOK {
+		httpresponse.JSONError(w, res.Status, res.Msg)
+		return
+	}
+
+	httpresponse.JSONSuccess(w, res)
+}
+
+// Update godoc
+// @Summary Atualizar item de estoque
+// @Description Atualiza os dados de um item de estoque existente
+// @Tags stock-items
+// @Accept json
+// @Produce json
+// @Param stockItem body stockitemsModel.StockItemsBaixa true "Stock Item"
+// @Success 200 {object} httpresponse.Response
+// @Failure 400 {object} httpresponse.Response
+// @Failure 404 {object} httpresponse.Response
+// @Router /stock-items/baixa [post]
+func (c *Controller) DeductQuantity(w http.ResponseWriter, r *http.Request) {
+	c.Logger.Info("(StockItem) DeductQuantity - req recebida")
+
+	var baixa stockitemsModel.StockItemsBaixa
+
+	err := json.NewDecoder(r.Body).Decode(&baixa)
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, "request invalido, falha ao decodificar body")
+		return
+	}
+
+	err = baixa.ValidateBaixa()
+	if err != nil {
+		httpresponse.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	update := c.Service.DeductQuantity(&baixa)
+
+	if update.Status != http.StatusOK {
+		httpresponse.JSONError(w, update.Status, update.Msg)
+		return
+	}
+
+	reason := "Baixa de estoque"
+	res := c.StockMovesService.Create(&stockmoves.StockMove{
+		ProductId:   baixa.ProductId,
+		WarehouseId: baixa.WarehouseId,
+		QtyMoved:    baixa.Quantity,
+		Reason:      &reason,
+	})
 
 	if res.Status != http.StatusOK {
 		httpresponse.JSONError(w, res.Status, res.Msg)

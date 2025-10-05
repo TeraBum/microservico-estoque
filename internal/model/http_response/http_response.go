@@ -14,7 +14,8 @@ func JSONError(w http.ResponseWriter, statusCode int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	_ = json.NewEncoder(w).Encode(Response{
-		Msg: msg,
+		Status: statusCode,
+		Msg:    msg,
 	})
 }
 

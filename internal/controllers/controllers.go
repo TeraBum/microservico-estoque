@@ -19,7 +19,7 @@ type Controllers struct {
 
 func InstanciateControllers(services *services.Services, logger *logrus.Logger) *Controllers {
 	return &Controllers{
-		StockItemsController: stockitems.New(services.StockItemsService, logger),
+		StockItemsController: stockitems.New(services.StockItemsService, services.StockMovesService, logger),
 		StockMovesController: stockmoves.New(services.StockMovesService, logger),
 		WarehouseController:  warehouse.New(services.WarehouseService, logger),
 		ProductController:    product.New(services.ProductService, logger),

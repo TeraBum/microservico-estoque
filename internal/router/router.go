@@ -56,8 +56,9 @@ func (r *Router) AttachRoutes() {
 func (r *Router) AttachStockItemsRoutes() {
 	subrouter := r.Router.PathPrefix("/api/v1/estoque/stock-items").Subrouter()
 
-	subrouter.Handle("", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.ProductController.List))).Methods(http.MethodGet)
+	subrouter.Handle("", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.StockItemsController.List))).Methods(http.MethodGet)
 	subrouter.Handle("", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.StockItemsController.Create))).Methods(http.MethodPost)
+	subrouter.Handle("/baixa", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.StockItemsController.DeductQuantity))).Methods(http.MethodPost)
 	subrouter.Handle("/{idWarehouse}/{idProduct}", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.StockItemsController.GetByID))).Methods(http.MethodGet)
 	subrouter.Handle("/{idWarehouse}/{idProduct}", middleware.JWTAuthMiddleware("Administrador")(http.HandlerFunc(r.StockItemsController.Update))).Methods(http.MethodPut)
 	subrouter.Handle("/{idWarehouse}/{idProduct}", middleware.JWTAuthMiddleware("Administrador")(http.HandlerFunc(r.StockItemsController.Delete))).Methods(http.MethodDelete)

@@ -28,7 +28,7 @@ func New(repository *productRepo.Repository, logger *logrus.Logger) *Service {
 func (s *Service) List() *list.ListResponse {
 	products, err := s.Repository.List()
 	if err != nil {
-		s.Logger.Errorf("List products: %v", err)
+		s.Logger.Errorf("(Product) List - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao listar produtos",
@@ -45,7 +45,7 @@ func (s *Service) List() *list.ListResponse {
 func (s *Service) Create(p *productModel.Product) *create.CreateResponse {
 	id, err := s.Repository.Create(p)
 	if err != nil {
-		s.Logger.Errorf("Create product: %v", err)
+		s.Logger.Errorf("(Product) Create - %v", err)
 		return &create.CreateResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao criar produto",
@@ -62,7 +62,7 @@ func (s *Service) Create(p *productModel.Product) *create.CreateResponse {
 func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 	product, err := s.Repository.GetByID(id)
 	if err != nil {
-		s.Logger.Errorf("Get product by ID: %v", err)
+		s.Logger.Errorf("(Product) GetByID - %v", err)
 		return &getbyid.GetByIdResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao buscar produto por ID",
@@ -86,7 +86,7 @@ func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 func (s *Service) Update(p *productModel.Product) *httpresponse.Response {
 	err := s.Repository.Update(p)
 	if err != nil {
-		s.Logger.Errorf("Update product: %v", err)
+		s.Logger.Errorf("(Product) Update - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao atualizar produto",
@@ -102,7 +102,7 @@ func (s *Service) Update(p *productModel.Product) *httpresponse.Response {
 func (s *Service) Delete(id *uuid.UUID) *httpresponse.Response {
 	err := s.Repository.Delete(id)
 	if err != nil {
-		s.Logger.Errorf("Delete product: %v", err)
+		s.Logger.Errorf("(Product) Delete - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao deletar produto",

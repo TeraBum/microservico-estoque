@@ -267,6 +267,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/stock-items/baixa": {
+            "post": {
+                "description": "Atualiza os dados de um item de estoque existente",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "stock-items"
+                ],
+                "summary": "Atualizar item de estoque",
+                "parameters": [
+                    {
+                        "description": "Stock Item",
+                        "name": "stockItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/stockitems.StockItemsBaixa"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpresponse.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpresponse.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpresponse.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/stock-items/{idWarehouse}/{idProduct}": {
             "get": {
                 "description": "Retorna um item de estoque específico pelo idWarehouse e idProduct",
@@ -870,6 +916,20 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "warehouse_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "stockitems.StockItemsBaixa": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
                 },
                 "warehouse_id": {
                     "type": "string"

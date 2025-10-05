@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"api-estoque/internal/config"
+	httpresponse "api-estoque/internal/model/http_response"
 	"api-estoque/internal/utils"
 	"context"
 	"errors"
@@ -30,7 +31,7 @@ func JWTAuthMiddleware(allowedRoles ...string) func(http.Handler) http.Handler {
 			tokenString := extractToken(r)
 			if tokenString == "" {
 				logger.Warn("Acesso negado por: header authorization faltando ou invalido")
-				http.Error(w, "header authorization faltando ou invalido", http.StatusUnauthorized)
+				httpresponse.JSONError(w, http.StatusUnauthorized, "header 'Authorization' faltando ou invalido")
 				return
 			}
 
@@ -45,13 +46,13 @@ func JWTAuthMiddleware(allowedRoles ...string) func(http.Handler) http.Handler {
 
 			if err != nil || !token.Valid {
 				logger.Warn("Acesso negado por: token invalido ou expirado")
-				http.Error(w, "token invalido ou expirado", http.StatusUnauthorized)
+				httpresponse.JSONError(w, http.StatusUnauthorized, "token invalido ou expirado")
 				return
 			}
 
 			if len(allowedRoles) > 0 && !hasAllowedRole(claims.Role, allowedRoles) {
 				logger.Warn("Acesso negado por: role incompativel")
-				http.Error(w, "forbidden: role incompativel", http.StatusForbidden)
+				httpresponse.JSONError(w, http.StatusForbidden, "forbidden: role incompativel")
 				return
 			}
 

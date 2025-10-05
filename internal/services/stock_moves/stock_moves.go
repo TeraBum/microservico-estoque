@@ -27,6 +27,7 @@ func New(repository *stockmovesRepo.Repository, logger *logrus.Logger) *Service 
 func (s *Service) List() *list.ListResponse {
 	stockMoves, err := s.Repository.List()
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) List - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar consulta para listar movimentos de estoque",
@@ -43,6 +44,7 @@ func (s *Service) List() *list.ListResponse {
 func (s *Service) ListByProduct(idProduct *uuid.UUID) *list.ListResponse {
 	stockMoves, err := s.Repository.ListByProduct(idProduct)
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) ListByProduct - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar consulta para listar movimentos de estoque por produto",
@@ -59,6 +61,7 @@ func (s *Service) ListByProduct(idProduct *uuid.UUID) *list.ListResponse {
 func (s *Service) ListByWarehouse(idWarehouse *uuid.UUID) *list.ListResponse {
 	stockMoves, err := s.Repository.ListByWarehouse(idWarehouse)
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) ListByWarehouse - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar consulta para listar movimentos de estoque por galpao",
@@ -75,6 +78,7 @@ func (s *Service) ListByWarehouse(idWarehouse *uuid.UUID) *list.ListResponse {
 func (s *Service) ListByWarehouseAndProduct(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *list.ListResponse {
 	stockMoves, err := s.Repository.ListByWarehouseAndProduct(idWarehouse, idProduct)
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) ListByWarehouseAndProduct - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar consulta para listar movimentos de estoque por galpao e produto",
@@ -91,9 +95,10 @@ func (s *Service) ListByWarehouseAndProduct(idWarehouse *uuid.UUID, idProduct *u
 func (s *Service) Create(warehouse *stockmovesModel.StockMove) *create.CreateResponse {
 	result, err := s.Repository.Create(warehouse)
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) Create - %v", err)
 		return &create.CreateResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar criacao de produto",
+			Msg:    "falha ao executar criacao de movimentacao de estoque",
 		}
 	}
 
@@ -107,9 +112,10 @@ func (s *Service) Create(warehouse *stockmovesModel.StockMove) *create.CreateRes
 func (s *Service) GetByID(id *uuid.UUID) *getbyid.GetByIdResponse {
 	stockMoves, err := s.Repository.GetByID(id)
 	if err != nil {
+		s.Logger.Errorf("(StockMoves) GetByID - %v", err)
 		return &getbyid.GetByIdResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar busca de produto por id",
+			Msg:    "falha ao executar busca de movimentacao de estoque por id",
 		}
 	}
 

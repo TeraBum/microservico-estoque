@@ -28,6 +28,7 @@ func New(repository *stockitemsRepo.Repository, logger *logrus.Logger) *Service 
 func (s *Service) List() *list.ListResponse {
 	stockItems, err := s.Repository.List()
 	if err != nil {
+		s.Logger.Errorf("(StockItems) List - %v", err)
 		return &list.ListResponse{
 			Status: http.StatusInternalServerError,
 			Msg:    "falha ao executar consulta para listar itens do estoque",
@@ -44,9 +45,10 @@ func (s *Service) List() *list.ListResponse {
 func (s *Service) Create(stockItems *stockitemsModel.StockItems) *create.CreateResponse {
 	stockItems, err := s.Repository.Create(stockItems)
 	if err != nil {
+		s.Logger.Errorf("(StockItems) Create - %v", err)
 		return &create.CreateResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar criacao de produto",
+			Msg:    "falha ao executar criacao de item de estoque",
 		}
 	}
 
@@ -61,9 +63,10 @@ func (s *Service) Create(stockItems *stockitemsModel.StockItems) *create.CreateR
 func (s *Service) GetByID(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *getbyid.GetByIdResponse {
 	stockItems, err := s.Repository.GetByID(idWarehouse, idProduct)
 	if err != nil {
+		s.Logger.Errorf("(StockItems) GetByID - %v", err)
 		return &getbyid.GetByIdResponse{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar busca de produto por id",
+			Msg:    "falha ao executar busca de item de estoque por id",
 		}
 	}
 
@@ -81,9 +84,26 @@ func (s *Service) GetByID(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *getbyid
 func (s *Service) Update(stockItems *stockitemsModel.StockItems) *httpresponse.Response {
 	err := s.Repository.Update(stockItems)
 	if err != nil {
+		s.Logger.Errorf("(StockItems) Update - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao executar busca de produto por id",
+			Msg:    "falha ao executar atualizacao de estoque",
+		}
+	}
+
+	return &httpresponse.Response{
+		Status: http.StatusOK,
+		Msg:    "Sucesso",
+	}
+}
+
+func (s *Service) DeductQuantity(baixa *stockitemsModel.StockItemsBaixa) *httpresponse.Response {
+	err := s.Repository.DeductQuantity(baixa)
+	if err != nil {
+		s.Logger.Errorf("(StockItems) DeductQuantity - %v", err)
+		return &httpresponse.Response{
+			Status: http.StatusInternalServerError,
+			Msg:    "falha ao executar a dedução de quantidade do estoque",
 		}
 	}
 
@@ -96,9 +116,10 @@ func (s *Service) Update(stockItems *stockitemsModel.StockItems) *httpresponse.R
 func (s *Service) Delete(idWarehouse *uuid.UUID, idProduct *uuid.UUID) *httpresponse.Response {
 	err := s.Repository.Delete(idWarehouse, idProduct)
 	if err != nil {
+		s.Logger.Errorf("(StockItems) Delete - %v", err)
 		return &httpresponse.Response{
 			Status: http.StatusInternalServerError,
-			Msg:    "falha ao deletar produto",
+			Msg:    "falha ao deletar item do estoque",
 		}
 	}
 

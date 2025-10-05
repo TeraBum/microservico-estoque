@@ -135,6 +135,32 @@ func (r *Repository) Update(s *stockitems.StockItems) error {
 	return r.DB.QueryRow(ctx, query, args...).Scan(&s.UpdatedAt)
 }
 
+func (r *Repository) DeductQuantity(baixa *stockitems.StockItemsBaixa) error {
+	ctx := context.Background()
+
+	query := `
+		UPDATE "StockItems"
+		SET "Quantity" = "Quantity" - $1,
+		    "UpdatedAt" = now()
+		WHERE "WarehouseId" = $2 
+		  AND "ProductId" = $3
+		  AND "Quantity" >= $1
+		RETURNING "Quantity"
+	`
+
+	var newQuantity int
+	err := r.DB.QueryRow(ctx, query, *baixa.Quantity, *baixa.WarehouseId, *baixa.ProductId).Scan(&newQuantity)
+	if err != nil {
+		return fmt.Errorf("failed to deduct quantity: %w", err)
+	}
+
+	if newQuantity < 0 {
+		return fmt.Errorf("quantity cannot be negative")
+	}
+
+	return nil
+}
+
 func (r *Repository) Delete(idWarehouse *uuid.UUID, idProduct *uuid.UUID) error {
 	ctx := context.Background()
 

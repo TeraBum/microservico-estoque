@@ -15,6 +15,32 @@ type StockItems struct {
 	UpdatedAt   *time.Time `db:"UpdatedAt" json:"updated_at"`
 }
 
+type StockItemsBaixa struct {
+	ProductId   *uuid.UUID `db:"ProductId" json:"product_id"`
+	WarehouseId *uuid.UUID `db:"WarehouseId" json:"warehouse_id"`
+	Quantity    *int64     `db:"Quantity" json:"quantity"`
+}
+
+func (s *StockItemsBaixa) ValidateBaixa() error {
+	if s.ProductId == nil {
+		return errors.New("atributo 'product_id' faltando")
+	}
+
+	if s.WarehouseId == nil {
+		return errors.New("atributo 'warehouse_id' faltando")
+	}
+
+	if s.Quantity == nil {
+		return errors.New("atributo 'quantity' faltando")
+	}
+
+	if *s.Quantity <= 0 {
+		return errors.New("atributo 'quantity' deve ser maior que zero")
+	}
+
+	return nil
+}
+
 func (s *StockItems) ValidateCreate() error {
 	if s.ProductId == nil {
 		return errors.New("atributo 'product_id' faltando")
