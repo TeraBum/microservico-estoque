@@ -1,6 +1,6 @@
 module api-estoque
 
-go 1.24.1
+go 1.25.1
 
 require (
 	github.com/gofrs/uuid v4.4.0+incompatible

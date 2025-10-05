@@ -50,7 +50,7 @@ func (r *Router) AttachRoutes() {
 	r.AttachWarehouseRoutes()
 	r.AttachStockMovesRoutes()
 	r.AttachProductRoutes()
-	r.Router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	r.Router.PathPrefix("/api/v1/estoque/swagger/").Handler(httpSwagger.WrapHandler)
 }
 
 func (r *Router) AttachStockItemsRoutes() {
@@ -72,7 +72,7 @@ func (r *Router) AttachStockMovesRoutes() {
 	subrouter.Handle("/{id}", middleware.JWTAuthMiddleware("Administrador", "Manager")(http.HandlerFunc(r.StockMovesController.GetByID))).Methods(http.MethodGet)
 	subrouter.HandleFunc("/by-product/{idProduct}", r.StockMovesController.ListByProduct).Methods(http.MethodGet)
 	subrouter.HandleFunc("/by-warehouse/{idWarehouse}", r.StockMovesController.ListByWarehouse).Methods(http.MethodGet)
-	subrouter.HandleFunc("/by-warehouse-product{idWarehouse}/{idProduct}", r.StockMovesController.ListByWarehouseAndProduct).Methods(http.MethodGet)
+	subrouter.HandleFunc("/by-warehouse-product/{idWarehouse}/{idProduct}", r.StockMovesController.ListByWarehouseAndProduct).Methods(http.MethodGet)
 }
 
 func (r *Router) AttachWarehouseRoutes() {
